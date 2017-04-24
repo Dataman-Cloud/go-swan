@@ -21,6 +21,8 @@ type Swan interface {
 	UpdateApplication(appID string, version *types.Version) (*types.App, error)
 	// proceed the rolling update
 	ProceedUpdate(appID string, param *types.ProceedUpdateParam) error
+	// updates slot's weight for one app
+	UpdateWeights(appID string, param *types.UpdateWeightsParam) (*types.App, error)
 	// cancel the rolling update
 	CancelUpdate(appID string) error
 	// scale up the app
