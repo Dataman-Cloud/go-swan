@@ -67,6 +67,16 @@ func (r *swanClient) ProceedUpdate(appID string, param *types.ProceedUpdateParam
 	return nil
 }
 
+// UpdateWeights updates slots' weight for one app
+func (r *swanClient) UpdateWeights(appID string, param *types.UpdateWeightsParam) (*types.App, error) {
+	result := new(types.App)
+	if err := r.apiPatch(APIApps+"/"+appID+"/weights", &param, result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
 // CancelUpdate canceled the rolling update
 func (r *swanClient) CancelUpdate(appID string) error {
 	if err := r.apiPatch(APIApps+"/"+appID+"/cancel-update", nil, nil); err != nil {
