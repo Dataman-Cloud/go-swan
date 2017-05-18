@@ -41,4 +41,13 @@ type Swan interface {
 
 	// -- FRAMEWORK --
 	GetFrameworkInfo() (*types.FrameworkInfo, error)
+
+	// YAML parse
+	ParseYAML(yaml string) (map[string][]string, error)
+
+	// Compose Instance op
+	RunCompose(req *types.ComposeRequest) (*types.ComposeInstance, error)
+	ListComposeInstances() ([]*types.ComposeInstance, error)
+	GetComposeInstance(idOrName string) (*types.ComposeInstanceWrapper, error)
+	RemoveComposeInstance(idOrName string) error
 }

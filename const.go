@@ -7,5 +7,6 @@ const (
 	APIVersion = "v_beta"
 	APIApps    = APIVersion + "/apps"
 	APITasks   = APIVersion + "/tasks"
+	APICompose = APIVersion + "/compose"
 	APIPing    = "ping"
 )
