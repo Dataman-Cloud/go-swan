@@ -2,6 +2,7 @@ package swan
 
 import (
 	"fmt"
+	"net/http"
 )
 
 // APIError represents a generic API error.
@@ -12,7 +13,7 @@ type APIError struct {
 }
 
 func (e *APIError) Error() string {
-	return fmt.Sprintf("Swan API error: %s", e.message)
+	return fmt.Sprintf("Swan API error: %d(%s) - %s", e.ErrCode, http.StatusText(e.ErrCode), e.message)
 }
 
 // NewAPIError creates a new APIError instance from the given response code and content.
