@@ -47,7 +47,7 @@ type Swan interface {
 
 	// Compose Instance op
 	RunCompose(req *types.ComposeRequest) (*types.ComposeInstance, error)
-	ListComposeInstances() ([]*types.ComposeInstance, error)
+	ListComposeInstances(filter url.Values) ([]*types.ComposeInstance, error)
 	GetComposeInstance(idOrName string) (*types.ComposeInstanceWrapper, error)
 	RemoveComposeInstance(idOrName string) error
 }
