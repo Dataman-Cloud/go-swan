@@ -1,6 +1,8 @@
 package swan
 
 import (
+	"net/url"
+
 	"github.com/Dataman-Cloud/swan/src/types"
 )
 
@@ -17,9 +19,9 @@ func (r *swanClient) RunCompose(req *types.ComposeRequest) (*types.ComposeInstan
 	return ret, err
 }
 
-func (r *swanClient) ListComposeInstances() ([]*types.ComposeInstance, error) {
+func (r *swanClient) ListComposeInstances(filter url.Values) ([]*types.ComposeInstance, error) {
 	ret := make([]*types.ComposeInstance, 0, 0)
-	err := r.apiGet(APICompose, nil, &ret)
+	err := r.apiGet(APICompose+"?"+filter.Encode(), nil, &ret)
 	return ret, err
 }
 
