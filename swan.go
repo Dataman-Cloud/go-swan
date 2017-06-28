@@ -10,37 +10,30 @@ import (
 type Swan interface {
 	// -- APPLICATIONS ---
 	// create an application in swan
-	CreateApplication(version *types.Version) (*types.App, error)
+	CreateApplication(version *types.Version) (*CreateResponse, error)
 	// get a list of applications from swan
-	Applications(url.Values) ([]*types.App, error)
+	Applications(url.Values) ([]*types.Application, error)
 	// delete an application in swan
 	DeleteApplication(appID string) error
 	// get an applications from swan
-	GetApplication(appID string) (*types.App, error)
+	GetApplication(appID string) (*types.Application, error)
+	// CreateApplicationVersion
+	CreateApplicationVersion(appID string, version *types.Version) (*CreateResponse, error)
 	// update an application in swan
-	UpdateApplication(appID string, version *types.Version) (*types.App, error)
-	// proceed the rolling update
-	ProceedUpdate(appID string, param *types.ProceedUpdateParam) error
+	UpdateApplication(appID string, update *types.UpdateBody) error
 	// updates slot's weight for one app
-	UpdateWeights(appID string, param *types.UpdateWeightsParam) (*types.App, error)
-	// cancel the rolling update
-	CancelUpdate(appID string) error
-	// scale up the app
-	ScaleUp(appID string, param *types.ScaleUpParam) error
-	// scale down the app
-	ScaleDown(appID string, param *types.ScaleDownParam) error
+	UpdateWeights(appID string, param *types.UpdateWeightsBody) error
+	// scale the app
+	ScaleApplication(appID string, param *types.ScaleBody) error
 	// get versions of the app
 	GetAppVersions(appID string) ([]*types.Version, error)
 	// get the app version
 	GetAppVersion(appID, versionID string) (*types.Version, error)
 	// get the app task
-	GetAppTask(appID, taskIndex string) (*types.Task, error)
+	GetAppTask(appID, taskID string) (*types.Task, error)
 
 	// -- SUBSCRIPTIONS --
 	AddEventsListener() (EventsChannel, error)
-
-	// -- FRAMEWORK --
-	GetFrameworkInfo() (*types.FrameworkInfo, error)
 
 	// YAML parse
 	ParseYAML(yaml string) (map[string][]string, error)

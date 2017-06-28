@@ -6,10 +6,14 @@ import (
 	"github.com/Dataman-Cloud/swan/src/types"
 )
 
+type CreateResponse struct {
+	ID string `json:"Id"`
+}
+
 // CreateApplication creates a new application in Swan
 // version:the structure holding the application configuration
-func (r *swanClient) CreateApplication(version *types.Version) (*types.App, error) {
-	result := new(types.App)
+func (r *swanClient) CreateApplication(version *types.Version) (*CreateResponse, error) {
+	result := new(CreateResponse)
 	if err := r.apiPost(APIApps, &version, result); err != nil {
 		return nil, err
 	}
@@ -18,8 +22,8 @@ func (r *swanClient) CreateApplication(version *types.Version) (*types.App, erro
 }
 
 // Applications retrieves an array of all the applications in swan
-func (r *swanClient) Applications(v url.Values) ([]*types.App, error) {
-	applications := new([]*types.App)
+func (r *swanClient) Applications(v url.Values) ([]*types.Application, error) {
+	applications := new([]*types.Application)
 	err := r.apiGet(APIApps+"?"+v.Encode(), nil, applications)
 	if err != nil {
 		return nil, err
@@ -38,8 +42,8 @@ func (r *swanClient) DeleteApplication(appID string) error {
 }
 
 // GetApplication retrieves an application from Swan
-func (r *swanClient) GetApplication(appID string) (*types.App, error) {
-	result := new(types.App)
+func (r *swanClient) GetApplication(appID string) (*types.Application, error) {
+	result := new(types.Application)
 	if err := r.apiGet(APIApps+"/"+appID, nil, result); err != nil {
 		return nil, err
 	}
@@ -47,20 +51,19 @@ func (r *swanClient) GetApplication(appID string) (*types.App, error) {
 	return result, nil
 }
 
-// UpdateApplication updates an application in Swan
-// 		version:		the structure holding the application configuration
-func (r *swanClient) UpdateApplication(appID string, version *types.Version) (*types.App, error) {
-	result := new(types.App)
-	if err := r.apiPut(APIApps+"/"+appID, &version, result); err != nil {
+// CreateVersion
+func (r *swanClient) CreateApplicationVersion(appID string, version *types.Version) (*CreateResponse, error) {
+	result := new(CreateResponse)
+	if err := r.apiPost(APIApps+"/"+appID+"/versions", &version, result); err != nil {
 		return nil, err
 	}
 
 	return result, nil
 }
 
-// ProceedUpdate proceed the rolling update
-func (r *swanClient) ProceedUpdate(appID string, param *types.ProceedUpdateParam) error {
-	if err := r.apiPatch(APIApps+"/"+appID+"/proceed-update", &param, nil); err != nil {
+// UpdateApplication updates an application in Swan
+func (r *swanClient) UpdateApplication(appID string, update *types.UpdateBody) error {
+	if err := r.apiPut(APIApps+"/"+appID, &update, nil); err != nil {
 		return err
 	}
 
@@ -68,36 +71,17 @@ func (r *swanClient) ProceedUpdate(appID string, param *types.ProceedUpdateParam
 }
 
 // UpdateWeights updates slots' weight for one app
-func (r *swanClient) UpdateWeights(appID string, param *types.UpdateWeightsParam) (*types.App, error) {
-	result := new(types.App)
-	if err := r.apiPatch(APIApps+"/"+appID+"/weights", &param, result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-// CancelUpdate canceled the rolling update
-func (r *swanClient) CancelUpdate(appID string) error {
-	if err := r.apiPatch(APIApps+"/"+appID+"/cancel-update", nil, nil); err != nil {
+func (r *swanClient) UpdateWeights(appID string, param *types.UpdateWeightsBody) error {
+	if err := r.apiPatch(APIApps+"/"+appID+"/weights", &param); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// ScaleUp
-func (r *swanClient) ScaleUp(appID string, param *types.ScaleUpParam) error {
-	if err := r.apiPatch(APIApps+"/"+appID+"/scale-up", &param, nil); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ScaleDown
-func (r *swanClient) ScaleDown(appID string, param *types.ScaleDownParam) error {
-	if err := r.apiPatch(APIApps+"/"+appID+"/scale-down", &param, nil); err != nil {
+// ScaleApplication
+func (r *swanClient) ScaleApplication(appID string, param *types.ScaleBody) error {
+	if err := r.apiPatch(APIApps+"/"+appID, &param, nil); err != nil {
 		return err
 	}
 
@@ -125,9 +109,9 @@ func (r *swanClient) GetAppVersion(appID, versionID string) (*types.Version, err
 }
 
 // GetAppTask get the given task of the given application
-func (r *swanClient) GetAppTask(appID, taskIndex string) (*types.Task, error) {
+func (r *swanClient) GetAppTask(appID, taskID string) (*types.Task, error) {
 	result := new(types.Task)
-	if err := r.apiGet(APIApps+"/"+appID+"/tasks/"+taskIndex, nil, result); err != nil {
+	if err := r.apiGet(APIApps+"/"+appID+"/tasks/"+taskID, nil, result); err != nil {
 		return nil, err
 	}
 

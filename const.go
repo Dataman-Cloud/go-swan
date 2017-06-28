@@ -4,9 +4,8 @@ const (
 	defaultEventsURL = "events"
 
 	/* --- api related constants --- */
-	APIVersion = "v_beta"
+	APIVersion = "v1"
 	APIApps    = APIVersion + "/apps"
-	APITasks   = APIVersion + "/tasks"
 	APICompose = APIVersion + "/compose"
 	APIPing    = "ping"
 )
