@@ -3,7 +3,7 @@ package swan
 import (
 	"net/url"
 
-	"github.com/Dataman-Cloud/swan/src/types"
+	"github.com/Dataman-Cloud/swan/types"
 )
 
 func (r *swanClient) ParseYAML(yaml string) (map[string][]string, error) {
@@ -13,24 +13,24 @@ func (r *swanClient) ParseYAML(yaml string) (map[string][]string, error) {
 	return ret, err
 }
 
-func (r *swanClient) RunCompose(req *types.ComposeRequest) (*types.ComposeInstance, error) {
-	ret := new(types.ComposeInstance)
-	err := r.apiPost(APICompose, req, &ret)
-	return ret, err
+func (r *swanClient) RunCompose(req *types.Compose) (string, error) {
+	var result string
+	err := r.apiPost(APICompose, req, result)
+	return result, err
 }
 
-func (r *swanClient) ListComposeInstances(filter url.Values) ([]*types.ComposeInstance, error) {
-	ret := make([]*types.ComposeInstance, 0, 0)
+func (r *swanClient) ListCompose(filter url.Values) ([]*types.Compose, error) {
+	ret := make([]*types.Compose, 0, 0)
 	err := r.apiGet(APICompose+"?"+filter.Encode(), nil, &ret)
 	return ret, err
 }
 
-func (r *swanClient) GetComposeInstance(idOrName string) (*types.ComposeInstanceWrapper, error) {
-	ret := new(types.ComposeInstanceWrapper)
+func (r *swanClient) GetCompose(idOrName string) (*types.Compose, error) {
+	ret := new(types.Compose)
 	err := r.apiGet(APICompose+"/"+idOrName, nil, &ret)
 	return ret, err
 }
 
-func (r *swanClient) RemoveComposeInstance(idOrName string) error {
+func (r *swanClient) RemoveCompose(idOrName string) error {
 	return r.apiDelete(APICompose+"/"+idOrName, nil, nil)
 }
