@@ -3,7 +3,7 @@ package swan
 import (
 	"net/url"
 
-	"github.com/Dataman-Cloud/swan/src/types"
+	"github.com/Dataman-Cloud/swan/types"
 )
 
 type CreateResponse struct {
@@ -70,9 +70,18 @@ func (r *swanClient) UpdateApplication(appID string, update *types.UpdateBody) e
 	return nil
 }
 
+// Rollback app version to previous version
+func (r *swanClient) RollbackApplication(appID string) error {
+	if err := r.apiPost(APIApps+"/"+appID, nil, nil); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // UpdateWeights updates slots' weight for one app
 func (r *swanClient) UpdateWeights(appID string, param *types.UpdateWeightsBody) error {
-	if err := r.apiPatch(APIApps+"/"+appID+"/weights", &param); err != nil {
+	if err := r.apiPatch(APIApps+"/"+appID+"/weights", &param, nil); err != nil {
 		return err
 	}
 
@@ -86,6 +95,15 @@ func (r *swanClient) ScaleApplication(appID string, param *types.ScaleBody) erro
 	}
 
 	return nil
+}
+
+// CreateAppVersion create app version
+func (r *swanClient) CreateAppVersion(appID string, version *types.Version) (*types.Version, error) {
+	result := new(types.Version)
+	if err := r.apiPost(APIApps+"/"+appID+"/versions", &version, result); err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // GetAppVersions get all versions of the given application
@@ -106,6 +124,15 @@ func (r *swanClient) GetAppVersion(appID, versionID string) (*types.Version, err
 	}
 
 	return result, nil
+}
+
+// GetAppTasks get the tasks of the given application
+func (r *swanClient) GetAppTasks(appID string) ([]*types.Task, error) {
+	tasks := new([]*types.Task)
+	if err := r.apiGet(APIApps+"/"+appID+"/tasks", nil, tasks); err != nil {
+		return nil, err
+	}
+	return *tasks, nil
 }
 
 // GetAppTask get the given task of the given application

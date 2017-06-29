@@ -3,7 +3,7 @@ package swan
 import (
 	"net/url"
 
-	"github.com/Dataman-Cloud/swan/src/types"
+	"github.com/Dataman-Cloud/swan/types"
 )
 
 // Swan is the interface to the Swan API
@@ -21,14 +21,24 @@ type Swan interface {
 	CreateApplicationVersion(appID string, version *types.Version) (*CreateResponse, error)
 	// update an application in swan
 	UpdateApplication(appID string, update *types.UpdateBody) error
+	// rollback application to previous version
+	RollbackApplication(appID string) error
+
 	// updates slot's weight for one app
 	UpdateWeights(appID string, param *types.UpdateWeightsBody) error
+
 	// scale the app
 	ScaleApplication(appID string, param *types.ScaleBody) error
-	// get versions of the app
+
+	// create app version
+	CreateAppVersion(appID string, version *types.Version) (*types.Version, error)
+	// get app versions
 	GetAppVersions(appID string) ([]*types.Version, error)
-	// get the app version
+	// get app version
 	GetAppVersion(appID, versionID string) (*types.Version, error)
+
+	// get the app tasks
+	GetAppTasks(appID string) ([]*types.Task, error)
 	// get the app task
 	GetAppTask(appID, taskID string) (*types.Task, error)
 
@@ -39,8 +49,8 @@ type Swan interface {
 	ParseYAML(yaml string) (map[string][]string, error)
 
 	// Compose Instance op
-	RunCompose(req *types.ComposeRequest) (*types.ComposeInstance, error)
-	ListComposeInstances(filter url.Values) ([]*types.ComposeInstance, error)
-	GetComposeInstance(idOrName string) (*types.ComposeInstanceWrapper, error)
-	RemoveComposeInstance(idOrName string) error
+	RunCompose(req *types.Compose) (string, error)
+	ListCompose(filter url.Values) ([]*types.Compose, error)
+	GetCompose(idOrName string) (*types.Compose, error)
+	RemoveCompose(idOrName string) error
 }
